@@ -45,7 +45,10 @@ public class FuncionarioDAO_JDBC implements FuncionarioDAO {
 
 		try {
 			banco.abreConexao();
-			if (buscarFuncionario(matricula) != null) {
+			sql = "SELECT * FROM funcionario WHERE matricula='" + matricula + "'";
+			ResultSet rs = banco.query(sql);
+			
+			if (rs.next()) {
 
 				if (tipoDado.equalsIgnoreCase("funcao")) {
 					return atualizarFuncao(matricula, valor);
@@ -91,9 +94,11 @@ public class FuncionarioDAO_JDBC implements FuncionarioDAO {
 	public boolean removerFuncionario(int matricula) {
 
 		try {
-
-			if (buscarFuncionario(matricula) != null) {
-				banco.abreConexao();
+			banco.abreConexao();
+			sql = "SELECT * FROM funcionario WHERE matricula='"+matricula+"'";
+			ResultSet rs = banco.query(sql);
+			
+			if (rs.next()) {
 				sql = "DELETE FROM funcionario WHERE matricula='" + matricula + "'";
 				banco.update(sql);
 				return true;
@@ -133,7 +138,7 @@ public class FuncionarioDAO_JDBC implements FuncionarioDAO {
 				func.setCidade(rs.getString("cidade"));
 
 				func.setTelefones(telefoneDAO.buscarTelefone(matricula));
-				;
+				
 				return func;
 			}
 

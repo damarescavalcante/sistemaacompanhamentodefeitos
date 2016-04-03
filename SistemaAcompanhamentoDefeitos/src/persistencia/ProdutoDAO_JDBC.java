@@ -45,9 +45,12 @@ public class ProdutoDAO_JDBC implements ProdutoDAO {
 	public boolean atualizarDescricao(int codProduto, String descricao) {
 
 		try {
+			banco.abreConexao();
+			sql = "SELECT * FROM produto WHERE cod_produto='"+codProduto+"'";
+			ResultSet rs = banco.query(sql);
 			
-			if (buscarProduto(codProduto) != null) {
-				banco.abreConexao();
+			if (rs.next()) {
+			
 				sql = "UPDATE produto SET desc_funcao='" + descricao + "' WHERE cod_produto='" + codProduto + "'";
 				banco.update(sql);
 				return true;
@@ -134,9 +137,11 @@ public class ProdutoDAO_JDBC implements ProdutoDAO {
 	public boolean removerProduto(int codProduto) {
 
 		try {
-
-			if (buscarProduto(codProduto) != null) {
-				banco.abreConexao();
+			banco.abreConexao();
+			sql = "SELECT * FROM produto WHERE cod_produto='"+codProduto+"'";
+			ResultSet rs = banco.query(sql);			
+			
+			if (rs.next()) {
 				sql = "DELETE FROM produto WHERE cod_produto='" + codProduto + "'";
 				banco.update(sql);
 				return true;

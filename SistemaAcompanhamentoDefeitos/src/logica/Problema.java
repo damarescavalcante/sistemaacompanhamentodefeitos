@@ -8,9 +8,9 @@ public class Problema {
 	private String descricao;
 	private String dataIdentificacao;
 	private String dataResolucao;
-	private Produto codProduto;
-	private Funcionario matriculaFunc;
-	private HistoricoEntrada codHistorico;
+	private Produto produto;
+	private Funcionario funcionario;
+	private HistoricoEntrada historico;
 
 	public Problema() {
 	}
@@ -57,33 +57,34 @@ public class Problema {
 	}
 
 	public void setProduto(Produto p) {
-		this.codProduto = p;
+		this.produto = p;
 	}
 
-	public Produto getCodProduto() {
-		return codProduto;
+	public Produto getProduto() {
+		return produto;
 	}
 
-	public void setMatriculaFunc(Funcionario f) {
-		this.matriculaFunc = f;
+	public void setFuncionario(Funcionario f) {
+		this.funcionario = f;
 	}
 
-	public Funcionario getMatriculaFunc() {
-		return matriculaFunc;
+	public Funcionario getFuncionario() {
+		return funcionario;
 	}
 
-	public void setCodHistorico(HistoricoEntrada hs) {
-		this.codHistorico = hs;
+	public void setHistorico(HistoricoEntrada hs) {
+		this.historico = hs;
 	}
 
-	public HistoricoEntrada getCodHistorico() {
-		return codHistorico;
+	public HistoricoEntrada getHistorico() {
+		return historico;
 	}
 
 	@Override
 	public String toString() {
-		return "Problema \nCódigo:" + codProblema + "\nDescrição:" + descricao + "Data de Identificação:"
-				+ dataIdentificacao + "\nData de Resolução:" + dataResolucao + "\nCódigo do Produto:" + codProduto
-				+ "\nMatrícula do Funcionário:" + matriculaFunc + "\nCódigo do Histórico:" + codHistorico;
+		return "Problema \nCódigo: " + codProblema + "\nDescrição: " + descricao + "\nData de Identificação: "
+				+ dataIdentificacao + "\nData de Resolução: " + dataResolucao + "\nCódigo do Produto: " + produto
+				+ "\nMatrícula do Funcionário: " + funcionario.getMatricula() + "\nCódigo do Histórico: "
+				+ historico.getCodHistorico();
 	}
 }

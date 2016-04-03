@@ -1,6 +1,7 @@
 package aplicacao;
 
-import java.sql.Date;
+import java.util.Date;
+
 import java.util.ArrayList;
 
 import logica.Entrada;
@@ -31,7 +32,7 @@ public class FacadeJDBC {
 			p.setNome(nome);
 			p.setDescFuncao(descFuncao);
 
-			if (produtoDAO.cadastrarProduto(p) == true) {
+			if (produtoDAO.cadastrarProduto(p)) {
 				System.out.println("Produto " + nome + " cadastrado com sucesso!");
 			}
 
@@ -51,7 +52,7 @@ public class FacadeJDBC {
 	public void atualizarDescricaoProduto(int codProduto, String descFuncao) {
 
 		try {
-			if (produtoDAO.atualizarDescricao(codProduto, descFuncao) == true) {
+			if (produtoDAO.atualizarDescricao(codProduto, descFuncao)) {
 				System.out.println("Descrição do produto " + codProduto + " atualizada com sucesso!");
 			}
 
@@ -91,7 +92,7 @@ public class FacadeJDBC {
 	public void removerProduto(int codProduto) {
 
 		try {
-			if (produtoDAO.removerProduto(codProduto) == true) {
+			if (produtoDAO.removerProduto(codProduto)) {
 				System.out.println("Produto " + codProduto + " removido com sucesso!");
 			}
 
@@ -106,52 +107,184 @@ public class FacadeJDBC {
 
 	}
 
-	public void cadastrarProblema(String descProblema, String dataIdentificacao, int codProduto,
-			int matriculaFunc, HistoricoEntrada historico) {
+	public void cadastrarProblema(String descProblema, String dataIdentificacao, int codProduto, int matriculaFunc,
+			HistoricoEntrada historico) {
 		Problema p = new Problema();
-		Funcionario f = new Funcionario();
-		Produto produto = new Produto();
+		Funcionario f = buscarFuncionario(matriculaFunc);
+		Produto produto = buscarProduto(codProduto);
 		try {
 			p.setDescricao(descProblema);
 			p.setDataIdentificacao(dataIdentificacao);
-			produto.setCodProduto(codProduto);
 			p.setProduto(produto);
-			f.setMatricula(matriculaFunc);
-			p.setMatriculaFunc(f);
-			if (problemaDAO.cadastrarProblema(p)) {
+			p.setFuncionario(f);
+			historico.setProblema(p);
+
+			if (problemaDAO.cadastrarProblema(p) && historicoDAO.adicionarHistoricoProblema(historico)) {
 				System.out.println("Problema: " + descProblema + " cadastrado com sucesso!");
 			}
-			
+
 			else {
 				System.out.println("Não foi possível cadastrar o problema: " + descProblema);
 			}
-		} 
-		
+		}
+
 		catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		
-		
+
+	}
+
+	public void adicionarHistoricoProblema(int codProblema) {
+
+		try {
+
+			if (problemaDAO.adicionarHistoricoProblema(codProblema)) {
+				System.out.println("Histórico adicionado ao problema " + codProblema + " com sucesso!");
+			}
+
+			else {
+				System.out.println("Não foi possível adicionar o histórico ao problema!");
+			}
+
+		}
+
+		catch (Exception e) {
+
+		}
+
 	}
 
 	public Problema buscarProblema(int codProblema) {
-		return null;
+
+		try {
+
+			if (problemaDAO.buscarProblema(codProblema) != null) {
+				return problemaDAO.buscarProblema(codProblema);
+			}
+
+			else {
+				System.out.println("Não foi possível buscar o problema " + codProblema);
+				return null;
+			}
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+
 	}
 
 	public void encerrarProblema(int codProblema) {
 
+		try {
+
+			if (problemaDAO.encerrarProblema(codProblema)) {
+				System.out.println("Problema " + codProblema + " encerrado com sucesso!");
+			} else {
+				System.out.println("Não foi possível encerrar o problema!");
+			}
+
+		}
+
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+	}
+
+	public void atualizarDescricaoProblema(int codProblema, String descricao) {
+
+		try {
+
+			if (problemaDAO.atualizarDescricao(codProblema, descricao)) {
+				System.out.println("Descrição do problema " + codProblema + " atualizada com sucesso!");
+			}
+
+			else {
+				System.out.println("Não foi possível atualizar a descrição do problema " + codProblema);
+			}
+
+		}
+
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
 	}
 
 	public ArrayList<Entrada> consultarHistoricoEntrada(int codProblema) {
-		return null;
+		
+		try {
+			
+			if (problemaDAO.consultarHistorico(codProblema) != null) {
+				return problemaDAO.consultarHistorico(codProblema);
+			}
+			
+			else {
+				System.out.println("Não foi possível consultar o histórico do problema " + codProblema);
+				return null;
+			}
+			
+		} 
+		
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+		
 	}
 
-	public void registrarEntrada(int codEntrada, Date dataPostada, String descricao, String statusProblema,
-			int codHistorico, int matriculaFunc) {
+	public void registrarEntrada(Date dataPostada, String descricao, String statusProblema, int codProblema,
+			int matriculaFunc) {
+		Problema p = buscarProblema(codProblema);
+		HistoricoEntrada h = new HistoricoEntrada();
+		Funcionario f = buscarFuncionario(matriculaFunc);
+		Entrada e = new Entrada();
+		h.setProblema(p);
+		try {
+			e.setDataPostada(dataPostada);
+			e.setDescricao(descricao);
+			e.setStatusProblema(statusProblema);
+			e.setHistorico(h);
+			e.setFuncionario(f);
+
+			if (entradaDAO.registrarEntrada(e)) {
+				System.out.println("Entrada: " + descricao + " registrada com sucesso!");
+			}
+
+			else {
+				System.out.println("Não foi possível registrar a entrada: " + descricao);
+			}
+		}
+
+		catch (Exception e2) {
+			System.out.println(e2.getMessage());
+		}
 
 	}
 
-	public void cadastrarFuncionario(int matricula, String nome, String funcao, String rua, String bairro, String cep, String cidade, ArrayList<Telefone> telefones) {
+	public void removerEntrada(int codEntrada) {
+
+		try {
+
+			if (entradaDAO.removerEntrada(codEntrada)) {
+				System.out.println("Entrada " + codEntrada + " removida com sucesso!");
+			}
+
+			else {
+				System.out.println("Não foi possível remover a entrada " + codEntrada);
+			}
+
+		}
+
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+	}
+
+	public void cadastrarFuncionario(int matricula, String nome, String funcao, String rua, String bairro, String cep,
+			String cidade, ArrayList<Telefone> telefones) {
 		Funcionario f = new Funcionario();
 		try {
 			f.setMatricula(matricula);
@@ -200,21 +333,21 @@ public class FacadeJDBC {
 	public void atualizarTelefone(int matriculaFunc, String numeroAntigo, String numeroNovo) {
 
 		try {
-			
+
 			if (telefoneDAO.atualizarTelefone(matriculaFunc, numeroAntigo, numeroNovo) == true) {
 				System.out.println("Telefone " + numeroAntigo + " atualizado com sucesso para " + numeroNovo);
 			}
-			
+
 			else {
 				System.out.println("Não foi possível atualizar o telefone " + numeroAntigo);
 			}
-			
-		} 
-		
+
+		}
+
 		catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		
+
 	}
 
 	public Funcionario buscarFuncionario(int matriculaFunc) {
@@ -230,7 +363,7 @@ public class FacadeJDBC {
 				f.setCep(funcDAO.buscarFuncionario(matriculaFunc).getCep());
 				f.setCidade(funcDAO.buscarFuncionario(matriculaFunc).getCidade());
 				f.setTelefones(funcDAO.buscarFuncionario(matriculaFunc).getTelefones());
-				
+
 				return f;
 			}
 
@@ -245,7 +378,7 @@ public class FacadeJDBC {
 			System.out.println(e.getMessage());
 			return null;
 		}
-	
+
 	}
 
 	public void removerFuncionario(int matriculaFunc) {

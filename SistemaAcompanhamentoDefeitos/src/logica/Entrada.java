@@ -1,6 +1,7 @@
 package logica;
 
-import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Entrada {
 
@@ -8,23 +9,11 @@ public class Entrada {
 	private Date dataPostada;
 	private String statusProblema;
 	private String descricao;
-	private Funcionario matriculaFunc;
-	private HistoricoEntrada codHistorico;
+	private Funcionario funcionario;
+	private HistoricoEntrada historico;
 	
 	public Entrada (){}
-	/*
-	public Entrada(int codEntrada, Date dataPostada, String statusProblema, String descricao,
-			Funcionario matriculaFunc, HistoricoEntrada codHistorico) {
-		this.codEntrada = codEntrada;
-		this.dataPostada = dataPostada;
-		this.statusProblema = statusProblema;
-		this.descricao = descricao;
-		this.matriculaFunc = matriculaFunc;
-		this.codHistorico = codHistorico;
-	}
-	*/
-	
-	
+
 	//Métodos básicos
 	public void setCodEntrada(int codEntrada) {
 		this.codEntrada = codEntrada;
@@ -42,12 +31,12 @@ public class Entrada {
 		this.descricao = descricao;
 	}
 	
-	public void setMatriculaFunc(Funcionario matriculaFunc) {
-		this.matriculaFunc = matriculaFunc;
+	public void setFuncionario(Funcionario funcionario) {
+		this.funcionario = funcionario;
 	}
 	
-	public void setCodHistorico(HistoricoEntrada codHistorico) {
-		this.codHistorico = codHistorico;
+	public void setHistorico(HistoricoEntrada historico) {
+		this.historico = historico;
 	}
 	
 	public int getCodEntrada() {
@@ -66,21 +55,25 @@ public class Entrada {
 		return descricao;
 	}
 
-	public Funcionario getMatriculaFunc() {
-		return matriculaFunc;
+	public Funcionario getFuncionario() {
+		return funcionario;
 	}
 
-	public HistoricoEntrada getCodHistorico() {
-		return codHistorico;
+	public HistoricoEntrada getHistorico() {
+		return historico;
 	}
 
 	@Override
 	public String toString() {
-		return "Entrada \nCódigo:" + codEntrada + "\nData Postada:" + dataPostada + "\nStatus do Problema:"
-				+ statusProblema + "\nDescrição:" + descricao + "\nmMatrícula do Funcionário:" + matriculaFunc + "\nCódigo do Histórico:"
-				+ codHistorico;
+		return "Entrada \nCódigo: " + codEntrada + "\nData Postada: " + formataData(dataPostada) + "\nStatus do Problema: "
+				+ statusProblema + "\nDescrição: " + descricao + "\nMatrícula do Funcionário: " + funcionario.getMatricula() + "\nCódigo do Histórico: "
+				+ historico.getCodHistorico() + "\n\n";
 	}
 	
-	
+	private String formataData(Date date) {
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		String data = format.format(date);
+		return data;
+	}
 	
 }

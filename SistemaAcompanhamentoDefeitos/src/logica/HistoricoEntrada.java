@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class HistoricoEntrada {
 
 	private int codHistorico;
-	private Problema codProblema = new Problema();
+	private Problema problema = new Problema();
 	private ArrayList<Entrada> entradas = new ArrayList<Entrada>();
 
 	public HistoricoEntrada() {
@@ -19,9 +19,13 @@ public class HistoricoEntrada {
 	public int getCodHistorico() {
 		return codHistorico;
 	}
+	
+	public void setProblema (Problema p) {
+		this.problema = p;
+	}
 
-	public Problema getCodProblema() {
-		return codProblema;
+	public Problema getProblema() {
+		return problema;
 	}
 
 	public ArrayList<Entrada> getEntradas() {
@@ -34,7 +38,7 @@ public class HistoricoEntrada {
 
 	@Override
 	public String toString() {
-		return "HistoricoStatus \nCódigo: " + codHistorico + "Código do Problema:" + codProblema + "\nEntradas:"
+		return "HistoricoStatus \nCódigo: " + codHistorico + "Código do Problema:" + problema + "\nEntradas:"
 				+ entradas;
 	}
 

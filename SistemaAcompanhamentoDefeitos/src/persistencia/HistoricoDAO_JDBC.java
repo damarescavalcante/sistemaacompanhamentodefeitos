@@ -3,7 +3,11 @@
 package persistencia;
 
 import java.sql.ResultSet;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+
 import logica.Entrada;
 import logica.Funcionario;
 import logica.HistoricoEntrada;
@@ -21,7 +25,7 @@ public class HistoricoDAO_JDBC implements HistoricoDAO {
 		ResultSet rs;
 		try {
 			banco.abreConexao();
-			sql = "SELECT cod_historico FROM historico_status WHERE cod_problema='" + codProblema + "'";
+			sql = "SELECT cod_historico FROM historico_entrada WHERE cod_problema='" + codProblema + "'";
 			rs = banco.query(sql);
 
 			if (rs.next()) {
@@ -33,13 +37,16 @@ public class HistoricoDAO_JDBC implements HistoricoDAO {
 				while (rs.next()) {
 					Entrada e = new Entrada();
 					e.setCodEntrada(rs.getInt("cod_entrada"));
-					e.setDataPostada(rs.getDate("data_postada"));
+					//Convertendo o retorno string de data para o formato DATE
+					DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+					Date data = (java.util.Date)df.parse(rs.getString("data_postada"));
+					e.setDataPostada(data);
 					e.setDescricao(rs.getString("desc_entrada"));
 					e.setStatusProblema(rs.getString("status_problema"));
 					he.setCodHistorico(rs.getInt("cod_historico"));
-					e.setCodHistorico(he);
+					e.setHistorico(he);
 					f.setMatricula(rs.getInt("matricula_func"));
-					e.setMatriculaFunc(f);
+					e.setFuncionario(f);
 					historico.add(e);
 				}
 
@@ -107,5 +114,42 @@ public class HistoricoDAO_JDBC implements HistoricoDAO {
 		}
 
 	}
+	
+	public boolean adicionarHistoricoProblema(HistoricoEntrada historico) {
+		
+		try {
+			banco.abreConexao();
 
+			sql = "SELECT cod_problema FROM problema WHERE desc_problema='"+historico.getProblema().getDescricao()+"' and data_identificacao='"+historico.getProblema().getDataIdentificacao()+"'";
+			ResultSet rs = banco.query(sql);
+			int codProblema = 0;
+			if (rs.next()) {
+				codProblema = rs.getInt("cod_problema");
+				System.out.println("codigo do problema:" + codProblema);
+				
+				sql = "INSERT INTO historico_entrada (cod_problema) values ('"
+						+ codProblema + "')";
+				banco.update(sql);
+				
+				return true;
+				
+			} 
+			
+			else {
+				return false;
+			}
+			
+		}
+
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+
+		finally {
+			banco.fechaConexao();
+		}
+
+	}
+	
 }
