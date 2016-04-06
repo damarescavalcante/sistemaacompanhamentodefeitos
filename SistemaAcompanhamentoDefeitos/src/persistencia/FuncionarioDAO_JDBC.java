@@ -11,6 +11,7 @@ public class FuncionarioDAO_JDBC implements FuncionarioDAO {
 	private TelefoneDAO_JDBC telefoneDAO = new TelefoneDAO_JDBC();
 	private String sql;
 
+	@Override
 	public boolean cadastrarFuncionario(Funcionario f) {
 		try {
 			banco.abreConexao();
@@ -41,6 +42,7 @@ public class FuncionarioDAO_JDBC implements FuncionarioDAO {
 		}
 	}
 
+	@Override
 	public boolean atualizarDados(int matricula, String tipoDado, String valor) {
 
 		try {
@@ -91,6 +93,7 @@ public class FuncionarioDAO_JDBC implements FuncionarioDAO {
 		}
 	}
 
+	@Override
 	public boolean removerFuncionario(int matricula) {
 
 		try {
@@ -120,6 +123,7 @@ public class FuncionarioDAO_JDBC implements FuncionarioDAO {
 		}
 	}
 
+	@Override
 	public Funcionario buscarFuncionario(int matricula) {
 		Funcionario func = new Funcionario();
 		try {

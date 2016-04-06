@@ -2,6 +2,20 @@
 //FALTA TESTAR
 package logica;
 
+import javax.persistence.CascadeType;
+
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "problema")
 public class Problema {
 
 	private int codProblema;
@@ -14,20 +28,14 @@ public class Problema {
 
 	public Problema() {
 	}
-	/*
-	 * public Problema(int codProblema, String descricao, Date
-	 * dataIdentificacao, Produto codProduto, Funcionario matriculaFunc,
-	 * HistoricoEntrada codHistorico) { super(); this.codProblema = codProblema;
-	 * this.descricao = descricao; this.dataIdentificacao = dataIdentificacao;
-	 * this.codProduto = codProduto; this.matriculaFunc = matriculaFunc;
-	 * this.codHistorico = codHistorico; }
-	 */
 
-	// métodos básicos
 	public void setCodProblema(int codProblema) {
 		this.codProblema = codProblema;
 	}
 
+	@Id
+	@GeneratedValue
+	@Column(name = "cod_problema")
 	public int getCodProblema() {
 		return codProblema;
 	}
@@ -36,6 +44,7 @@ public class Problema {
 		this.descricao = descricao;
 	}
 
+	@Column(name = "desc_problema")
 	public String getDescricao() {
 		return descricao;
 	}
@@ -44,10 +53,12 @@ public class Problema {
 		this.dataIdentificacao = date;
 	}
 
+	@Column(name = "data_identificacao")
 	public String getDataIdentificacao() {
 		return dataIdentificacao;
 	}
 
+	@Column(name = "data_resolucao")
 	public String getDataResolucao() {
 		return dataResolucao;
 	}
@@ -60,6 +71,8 @@ public class Problema {
 		this.produto = p;
 	}
 
+	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE })
+	@JoinColumn(name = "cod_produto")
 	public Produto getProduto() {
 		return produto;
 	}
@@ -68,6 +81,8 @@ public class Problema {
 		this.funcionario = f;
 	}
 
+	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE })
+	@JoinColumn(name = "matricula_func")
 	public Funcionario getFuncionario() {
 		return funcionario;
 	}
@@ -76,6 +91,8 @@ public class Problema {
 		this.historico = hs;
 	}
 
+	@OneToOne(cascade = { CascadeType.MERGE, CascadeType.REMOVE })
+	@JoinColumn(name = "cod_historico", nullable = true)
 	public HistoricoEntrada getHistorico() {
 		return historico;
 	}

@@ -11,6 +11,7 @@ public class ProdutoDAO_JDBC implements ProdutoDAO {
 	private BancoSingleton banco = BancoSingleton.getInstance();
 	private String sql;
 
+	@Override
 	public boolean cadastrarProduto(Produto p) {
 
 		try {
@@ -42,6 +43,7 @@ public class ProdutoDAO_JDBC implements ProdutoDAO {
 
 	}
 
+	@Override
 	public boolean atualizarDescricao(int codProduto, String descricao) {
 
 		try {
@@ -73,6 +75,7 @@ public class ProdutoDAO_JDBC implements ProdutoDAO {
 
 	}
 
+	@Override
 	public Produto buscarProduto(int codProduto) {
 		Produto p = new Produto();
 		try {
@@ -103,6 +106,7 @@ public class ProdutoDAO_JDBC implements ProdutoDAO {
 		}
 	}
 	
+	@Override
 	public Produto buscarProduto(String nome) {
 		Produto p = new Produto();
 		try {
@@ -134,6 +138,7 @@ public class ProdutoDAO_JDBC implements ProdutoDAO {
 		}
 	}
 
+	@Override
 	public boolean removerProduto(int codProduto) {
 
 		try {

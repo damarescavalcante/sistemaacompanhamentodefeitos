@@ -2,6 +2,14 @@
 //FALTA TESTAR
 package logica;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "produto")
 public class Produto {
 
 	private int codProduto;
@@ -10,13 +18,7 @@ public class Produto {
 
 	public Produto() {
 	}
-	/*
-	 * public Produto(int codProduto, String nome, String descFuncao) {
-	 * this.codProduto = codProduto; this.nome = nome; this.descFuncao =
-	 * descFuncao; }
-	 */
-
-	// métodos básicos
+	
 	public void setCodProduto(int codProduto) {
 		this.codProduto = codProduto;
 	}
@@ -29,6 +31,9 @@ public class Produto {
 		this.descFuncao = descricao;
 	}
 
+	@Id
+	@GeneratedValue
+	@Column(name = "cod_produto")
 	public int getCodProduto() {
 		return codProduto;
 	}
@@ -36,7 +41,8 @@ public class Produto {
 	public String getNome() {
 		return nome;
 	}
-
+	
+	@Column(name = "desc_funcao")
 	public String getDescFuncao() {
 		return descFuncao;
 	}

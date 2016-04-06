@@ -3,7 +3,14 @@
 package logica;
 
 import java.util.ArrayList;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
+@Entity
+@Table(name = "funcionario")
 public class Funcionario {
 
 	private int matricula;
@@ -23,6 +30,8 @@ public class Funcionario {
 		this.matricula = matricula;
 	}
 
+	@Id
+	@GeneratedValue
 	public int getMatricula() {
 		return matricula;
 	}
@@ -75,6 +84,7 @@ public class Funcionario {
 		this.cidade = cidade;
 	}
 
+	@Transient
 	public ArrayList<Telefone> getTelefones() {
 		return telefones;
 	}

@@ -9,6 +9,8 @@ public interface ProdutoDAO {
 	boolean atualizarDescricao(int codProduto, String descricao);
 
 	Produto buscarProduto(int codProduto);
+	
+	Produto buscarProduto(String nome);
 
 	boolean removerProduto(int codProduto);
 

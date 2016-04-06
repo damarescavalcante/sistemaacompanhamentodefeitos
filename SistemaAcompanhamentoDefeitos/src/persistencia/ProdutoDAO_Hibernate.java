@@ -1,40 +1,151 @@
 package persistencia;
 
-import java.util.ArrayList;
+import logica.Produto;
 
-import logica.Entrada;
-import logica.Problema;
-
-public class ProdutoDAO_Hibernate implements ProblemaDAO {
+public class ProdutoDAO_Hibernate implements ProdutoDAO {
+	
+	private BancoSingleton banco = BancoSingleton.getInstance();
+	private String sql;
 
 	@Override
-	public boolean cadastrarProblema(Problema p) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean cadastrarProduto(Produto p) {
+		
+		try {
+			
+			Produto produto = buscarProduto(p.getNome());
+			banco.criarSessao();
+			if (produto == null) {
+				banco.comitarObjetoSalvo(p);
+				return true;
+			}
+			
+			else{
+				return false;
+			}
+				
+		} 
+		
+		catch (Exception e) {
+			return false;
+		}
+		
+		finally {
+			banco.fecharSessao();
+		}
+		
 	}
 
 	@Override
 	public boolean atualizarDescricao(int codProduto, String descricao) {
-		// TODO Auto-generated method stub
-		return false;
+
+		try {
+			
+			if (this.buscarProduto(codProduto) != null) {
+				Produto produto = buscarProduto(codProduto);
+				produto.setDescFuncao(descricao);
+				banco.criarSessao();
+				banco.updateHibernate(produto);
+				return true;
+			}
+			
+			else {
+				return false;
+			}
+			
+		} 
+		
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+		
+		finally {
+			banco.fecharSessao();
+		}
+	
 	}
 
 	@Override
-	public boolean encerrarProblema(int codProblema) {
-		// TODO Auto-generated method stub
-		return false;
+	public Produto buscarProduto(int codProduto) {
+		
+		try {
+			banco.criarSessao();
+			sql = "SELECT p FROM Produto p WHERE p.codProduto='"+codProduto+"'";
+			Produto produto = (Produto) banco.recuperarObjeto(sql);
+			
+			if (produto != null) {
+				return produto;
+			}
+			else {
+				return null;
+			}
+		} 
+		
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+		
+		finally {
+			banco.fecharSessao();
+		}
 	}
-
+	
 	@Override
-	public ArrayList<Entrada> consultarHistorico(int codProblema) {
-		// TODO Auto-generated method stub
-		return null;
+	public Produto buscarProduto(String nome) {
+		
+		try {
+			banco.criarSessao();
+			sql = "SELECT p FROM Produto p WHERE p.nome='"+nome+"'";
+			Produto produto = (Produto) banco.recuperarObjeto(sql);
+			
+			if (produto != null) {
+				return produto;
+			}
+			else {
+				return null;
+			}
+		} 
+		
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+		
+		finally {
+			banco.fecharSessao();
+		}
 	}
-
+	
 	@Override
-	public Problema buscarProblema(int codProblema) {
-		// TODO Auto-generated method stub
-		return null;
+	public boolean removerProduto(int codProduto) {
+		
+		try {
+			
+			if (buscarProduto(codProduto) != null) {
+				banco.criarSessao();
+				sql = "SELECT p FROM Produto p WHERE p.codProduto='"+codProduto+"'";
+				
+				Produto produto = (Produto) banco.recuperarObjeto(sql);
+				banco.removeHibernate(produto);
+				return true;
+			}
+			
+			else {
+				return false;
+			}
+			
+		} 
+		
+		catch (Exception e) {
+			return false;
+		}
+		
+		finally {
+			banco.fecharSessao();
+		}
+		
+
 	}
 
 }

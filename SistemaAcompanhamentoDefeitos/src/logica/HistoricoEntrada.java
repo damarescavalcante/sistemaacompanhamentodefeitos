@@ -2,6 +2,18 @@ package logica;
 
 import java.util.ArrayList;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+@Entity
+@Table(name = "historico_entrada")
 public class HistoricoEntrada {
 
 	private int codHistorico;
@@ -16,6 +28,9 @@ public class HistoricoEntrada {
 		this.codHistorico = codHistorico;
 	}
 
+	@Id
+	@GeneratedValue
+	@Column(name = "cod_historico")
 	public int getCodHistorico() {
 		return codHistorico;
 	}
@@ -24,10 +39,13 @@ public class HistoricoEntrada {
 		this.problema = p;
 	}
 
+	@OneToOne
+	@JoinColumn(name = "cod_problema")
 	public Problema getProblema() {
 		return problema;
 	}
 
+	@Transient
 	public ArrayList<Entrada> getEntradas() {
 		return entradas;
 	}
